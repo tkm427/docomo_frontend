@@ -5,8 +5,13 @@ import ZoomURLText from "./ZoomURLText";
 import ActionButton from "./ActionButton";
 import MemberList from "./MemberList";
 import { ZoomUrlResponse } from "../lib/type";
-export default function MatchingResultPage(props: ZoomUrlResponse) {
-  const { userName, theme, zoomUrl } = props;
+interface MatchingResultPageProps extends ZoomUrlResponse {
+  // ZoomUrlResponseのuserName, theme, zoomUrlを受け取る
+  sessionId: string;
+}
+
+export default function MatchingResultPage(props: MatchingResultPageProps) {
+  const { sessionId, userName, theme, zoomUrl } = props;
   return (
     <div>
       {/* コンテンツエリア */}
@@ -37,7 +42,7 @@ export default function MatchingResultPage(props: ZoomUrlResponse) {
         <ZoomURLText zoomUrl={zoomUrl} />
 
         {/* ボタンエリア */}
-        <ActionButton zoomUrl={zoomUrl} />
+        <ActionButton zoomUrl={zoomUrl} sessionId={sessionId} />
       </Box>
     </div>
   );
