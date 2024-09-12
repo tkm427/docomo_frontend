@@ -50,7 +50,12 @@ export default function Page({ params }: { params: { id: string } }) {
       {isLoading ? (
         <LoadingScreen step={step} />
       ) : (
-        <MatchingResultPage userName={users} theme={theme} zoomUrl={zoomUrl} />
+        <MatchingResultPage
+          sessionId={sessionId}
+          userName={users}
+          theme={theme}
+          zoomUrl={zoomUrl}
+        />
       )}
     </div>
   );
