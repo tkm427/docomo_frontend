@@ -1,18 +1,18 @@
 "use client";
 
 import React from 'react';
-import { Radar } from 'react-chartjs-2';
-import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
-
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+import Header from './Header';
+import FeedbackMessage from './FeedbackMessage';
+import RadarChart from './RadarChart';
+import LineChart from './LineChart';
 
 const feedbackData = [
-  { label: '積極性', value: 3 },
-  { label: '論理的思考', value: 4 },
+  { label: '積極性', value: 4 },
+  { label: '論理的思考', value: 3 },
   { label: 'リーダーシップ', value: 2 },
-  { label: '協調性', value: 5 },
+  { label: '協調性', value: 4 },
   { label: '発言力', value: 3 },
-  { label: 'チームメンバーへの気配り', value: 4 },
+  { label: 'チームメンバーへの気配り', value: 5 },
 ];
 
 const radarData = {
@@ -21,8 +21,8 @@ const radarData = {
     {
       label: 'フィードバック',
       data: feedbackData.map((item) => item.value),
-      backgroundColor: 'rgba(34, 202, 236, 0.2)',
-      borderColor: 'rgba(34, 202, 236, 1)',
+      backgroundColor: 'rgba(240, 0, 51, 0.2)',
+      borderColor: '#F00033',
       borderWidth: 2,
     },
   ],
@@ -33,25 +33,76 @@ const radarOptions = {
     r: {
       suggestedMin: 0,
       suggestedMax: 5,
+      ticks: {
+        stepSize: 1, // 1刻みに設定
+      },
     },
   },
 };
 
+
+const lineData = {
+  labels: ['1回目', '2回目', '3回目', '4回目', '5回目', '6回目'],
+  datasets: [
+    {
+      label: '平均評価',
+      data: [2.5, 2.8, 3.0, 3.2, 3.5, 3.8],
+      borderColor: '#F00033',
+      backgroundColor: 'rgba(240, 0, 51, 0.2)',
+      fill: true,
+      tension: 0.3,
+    },
+  ],
+};
+
+const lineOptions = {
+  scales: {
+    x: {
+      grid: {
+        display: false, // X軸のグリッド線を消す
+      },
+    },
+    y: {
+      beginAtZero: true,
+      max: 5, // 最大値を設定
+      ticks: {
+        stepSize: 1, // 1刻みに設定
+      },
+      grid: {
+        display: false, // Y軸のグリッド線を消す
+      },
+    },
+  },
+};
+
+
 const FeedbackPage: React.FC = () => {
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>フィードバック</h1>
-      <h2 style={styles.subtitle}>直近のフィードバック</h2>
-      <div style={styles.chartContainer}>
-        <Radar data={radarData} options={radarOptions} />
+    <div>
+      <Header />
+      <div style={styles.subtitleContainer}>
+        <h2 style={styles.subtitle}>フィードバック</h2>
       </div>
-      <ul style={styles.feedbackList}>
-        {feedbackData.map((item) => (
-          <li key={item.label} style={styles.feedbackItem}>
-            <strong>{item.label}</strong>: {item.value}
-          </li>
-        ))}
-      </ul>
+
+      <p style={styles.date}>2024/9/11の結果</p>
+
+      <FeedbackMessage feedbackData={feedbackData} />
+
+      <div style={styles.chartContainer}>
+        <div style={styles.chartItem}>
+          <h3>前回との比較</h3>
+          <RadarChart data={radarData} options={radarOptions} />
+        </div>
+
+        <div style={styles.chartItem}>
+          <h3>平均評価の推移</h3>
+          <LineChart data={lineData} options={lineOptions} />
+        </div>
+      </div>
+
+      <div style={styles.messageBox}>
+        <span role="img" aria-label="checkmark">✔️</span> いい調子ですね！これからも頑張りましょう！
+      </div>
     </div>
   );
 };
@@ -62,26 +113,44 @@ const styles = {
     maxWidth: '800px',
     margin: '0 auto',
   },
-  title: {
+  subtitleContainer: {
     textAlign: 'center' as 'center',
-    marginBottom: '30px',
+    margin: '20px',
   },
   subtitle: {
-    fontSize: '20px',
+    textAlign: 'center' as 'center',
+    fontSize: '28px',
     marginBottom: '20px',
+    color: '#F00033',
+    fontWeight: 'bold' as 'bold',
+  },
+  date: {
+    textAlign: 'left' as 'left',
+    fontSize: '25px',
+    marginLeft: '20vw',
+    marginBottom: '10px',
   },
   chartContainer: {
-    width: '100%',
-    maxWidth: '600px',
-    margin: '0 auto 40px',
+    display: 'flex',
+    width: '80%',
+    height: '50vh',
+    justifyContent: 'center',   // 中央揃えに変更
+    gap: '20px',                // チャート間の隙間
+    marginBottom: '40px',
+    margin: '0 auto',           // コンテナ自体を画面中央に配置
   },
-  feedbackList: {
-    listStyleType: 'none' as 'none',
-    paddingLeft: 0,
+  
+  chartItem: {
+    flex: 1,
+    textAlign: 'center' as 'center',
   },
-  feedbackItem: {
-    fontSize: '18px',
-    marginBottom: '10px',
+  messageBox: {
+    backgroundColor: '#ffecec',
+    color: '#F00033',
+    padding: '15px',
+    borderRadius: '8px',
+    textAlign: 'center' as 'center',
+    fontSize: '16px',
   },
 };
 
