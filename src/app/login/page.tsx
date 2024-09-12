@@ -1,12 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Box, TextField, Typography, Container } from "@mui/material";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import CustomButton from "../../components/CustomButton";
+import { login } from "../../api/request";
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    const response = await login(email, password);
+    if (response) {
+      console.log(response.userId);
+      localStorage.setItem("userId", response.userId);
+      router.push("/m");
+    } else {
+      alert("ログインに失敗しました。");
+    }
+  };
+
   return (
     <>
       <Header />
@@ -26,14 +42,14 @@ const LoginPage: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center", // 縦方向の中央揃え
+            justifyContent: "center",
             marginTop: 4,
             padding: 4,
             boxShadow: 1,
             borderRadius: 2,
-            width: "100%", // 親コンテナの幅を固定
-            maxWidth: "400px", // ボタンが同じ幅になるように固定
-            margin: "0 auto", // 横方向の中央揃え
+            width: "100%",
+            maxWidth: "400px",
+            margin: "0 auto",
           }}
         >
           <Typography
@@ -48,7 +64,9 @@ const LoginPage: React.FC = () => {
             fullWidth
             margin="normal"
             placeholder="メールアドレスを入力してください。"
-            sx={{ mb: 2 }} // マージンを少し追加
+            sx={{ mb: 2 }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             label="パスワード"
@@ -57,12 +75,20 @@ const LoginPage: React.FC = () => {
             fullWidth
             margin="normal"
             placeholder="パスワードを入力してください。"
-            sx={{ mb: 2 }} // マージンを少し追加
+            sx={{ mb: 2 }}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          {/* サインインボタン */}
-          <CustomButton text="サインイン" colorType="primary" />
-          {/* 新規登録はこちらボタン */}
-          <CustomButton text="新規登録はこちら" colorType="secondary" />
+          <CustomButton
+            text="サインイン"
+            colorType="primary"
+            onClick={handleLogin}
+          />
+          <CustomButton
+            text="新規登録はこちら"
+            colorType="secondary"
+            onClick={() => router.push("/register")}
+          />
         </Box>
       </Container>
     </>

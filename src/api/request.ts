@@ -1,10 +1,17 @@
 import axios, { AxiosError } from "axios";
-import { SessionResponse, EndSessionResponse, UserIdResponse, ZoomUrlResponse } from "../lib/type";
+import {
+  SessionResponse,
+  MessageResponse,
+  UserIdResponse,
+  ZoomUrlResponse,
+  FeedbackResponse,
+} from "../lib/type";
 
 interface ApiError {
   error: string;
 }
-const BASE_URL = "https://localhost:8001";
+const BASE_URL =
+  "https://7a72ialkw7.execute-api.ap-northeast-1.amazonaws.com/api/";
 
 export const joinOrCreateSession = async (
   userId: string
@@ -36,9 +43,9 @@ export const joinOrCreateSession = async (
 
 export const endSession = async (
   sessionId: string
-): Promise<EndSessionResponse> => {
+): Promise<MessageResponse> => {
   try {
-    const response = await axios.get<EndSessionResponse>(
+    const response = await axios.get<MessageResponse>(
       `${BASE_URL}/end_session/${sessionId}/`
     );
     return response.data;
@@ -56,7 +63,11 @@ export const endSession = async (
   }
 };
 
-export const register = async (name: string, email: string, password: string): Promise<UserIdResponse> => {
+export const register = async (
+  name: string,
+  email: string,
+  password: string
+): Promise<UserIdResponse> => {
   try {
     const response = await axios.post<UserIdResponse>(
       `${BASE_URL}/register`,
@@ -82,7 +93,10 @@ export const register = async (name: string, email: string, password: string): P
   }
 };
 
-export const login = async (email: string, password: string): Promise<UserIdResponse> => {
+export const login = async (
+  email: string,
+  password: string
+): Promise<UserIdResponse> => {
   try {
     const response = await axios.post<UserIdResponse>(
       `${BASE_URL}/login`,
@@ -108,7 +122,9 @@ export const login = async (email: string, password: string): Promise<UserIdResp
   }
 };
 
-export const getZoomUrl = async (sessionId: string): Promise<ZoomUrlResponse> => {
+export const getZoomUrl = async (
+  sessionId: string
+): Promise<ZoomUrlResponse> => {
   try {
     const response = await axios.get<ZoomUrlResponse>(
       `${BASE_URL}/get_zoom_url/${sessionId}/`
@@ -121,6 +137,47 @@ export const getZoomUrl = async (sessionId: string): Promise<ZoomUrlResponse> =>
         throw new Error(
           axiosError.response.data.error ||
             "An error occurred while getting the Zoom URL"
+        );
+      }
+    }
+    throw new Error("An unexpected error occurred");
+  }
+};
+
+export const getFeedback = async (userId: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/get_feedback/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching feedback:', error);
+    throw error;
+  }
+};
+
+export const feedback = async(sessionId: string, userId: string, users: []): Promise<MessageResponse> => {
+  try {
+    const response = await axios.post<MessageResponse>(
+      `${BASE_URL}/feedback`,
+      { sessionId, userId, users },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<ApiError>;
+      if (axiosError.response) {
+        throw new Error(
+          axiosError.response.data.error ||
+            "An error occurred while sending feedback"
         );
       }
     }
