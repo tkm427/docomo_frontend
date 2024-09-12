@@ -5,23 +5,77 @@ import Header from './Header';
 import FeedbackMessage from './FeedbackMessage';
 import RadarChart from './RadarChart';
 import LineChart from './LineChart';
+import FeedbackList from './FeedbackList';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-interface Feedback {
-  proactivity: number;
-  logicality: number;
-  leadership: number;
-  cooperation: number;
-  expression: number;
-  consideration: number;
-  comment: string;
-  session_id: string;
-  user_id: string;
-  id: string;
-}
+// <<<<<<< feature/feedback
+// const feedbackData = [
+//   { label: '積極性', value: 4 },
+//   { label: '論理的思考', value: 3 },
+//   { label: 'リーダーシップ', value: 2 },
+//   { label: '協調性', value: 4 },
+//   { label: '発言力', value: 3 },
+//   { label: 'チームメンバーへの気配り', value: 5 },
+// ];
 
-interface FeedbackPageProps {
-  feedbackData: { [date: string]: Feedback[] }; // 日付ごとのフィードバックの配列
-}
+
+// const feedbackDataList = [
+//   { date: '2024/9/11', thema: 'お題1', label: '積極性', value: 4 },
+//   { date: '2024/9/11', thema: 'お題1', label: '論理的思考', value: 3 },
+//   { date: '2024/9/11', thema: 'お題1', label: 'リーダーシップ', value: 2 },
+//   { date: '2024/9/11', thema: 'お題1', label: '協調性', value: 4 },
+//   { date: '2024/9/11', thema: 'お題1', label: '発言力', value: 3 },
+//   { date: '2024/9/11', thema: 'お題1', label: 'チームメンバーへの気配り', value: 5 },
+//   { date: '2024/9/12', thema: 'お題2', label: '積極性', value: 3 },
+//   { date: '2024/9/12', thema: 'お題2', label: '論理的思考', value: 4 },
+//   { date: '2024/9/12', thema: 'お題2', label: 'リーダーシップ', value: 3 },
+//   { date: '2024/9/12', thema: 'お題2', label: '協調性', value: 5 },
+//   { date: '2024/9/12', thema: 'お題2', label: '発言力', value: 2 },
+//   { date: '2024/9/12', thema: 'お題2', label: 'チームメンバーへの気配り', value: 4 },
+//   { date: '2024/9/13', thema: 'お題3', label: '積極性', value: 3 },
+//   { date: '2024/9/13', thema: 'お題3', label: '論理的思考', value: 4 },
+//   { date: '2024/9/13', thema: 'お題3', label: 'リーダーシップ', value: 3 },
+//   { date: '2024/9/13', thema: 'お題3', label: '協調性', value: 5 },
+//   { date: '2024/9/13', thema: 'お題3', label: '発言力', value: 2 },
+//   { date: '2024/9/13', thema: 'お題3', label: 'チームメンバーへの気配り', value: 4 },
+//   { date: '2024/9/14', thema: 'お題4', label: '積極性', value: 3 },
+//   { date: '2024/9/14', thema: 'お題4', label: '論理的思考', value: 4 },
+//   { date: '2024/9/14', thema: 'お題4', label: 'リーダーシップ', value: 3 },
+//   { date: '2024/9/14', thema: 'お題4', label: '協調性', value: 5 },
+//   { date: '2024/9/14', thema: 'お題4', label: '発言力', value: 2 },
+//   { date: '2024/9/14', thema: 'お題4', label: 'チームメンバーへの気配り', value: 4 },
+// ];
+
+// const radarData = {
+//   labels: feedbackData.map((item) => item.label),
+//   datasets: [
+//     {
+//       label: 'フィードバック',
+//       data: feedbackData.map((item) => item.value),
+//       backgroundColor: 'rgba(240, 0, 51, 0.2)',
+//       borderColor: '#F00033',
+//       borderWidth: 2,
+//     },
+//   ],
+// };
+// =======
+// interface Feedback {
+//   proactivity: number;
+//   logicality: number;
+//   leadership: number;
+//   cooperation: number;
+//   expression: number;
+//   consideration: number;
+//   comment: string;
+//   session_id: string;
+//   user_id: string;
+//   id: string;
+// }
+
+// interface FeedbackPageProps {
+//   feedbackData: { [date: string]: Feedback[] }; // 日付ごとのフィードバックの配列
+// }
+// >>>>>>> main
 
 const radarOptions = {
   scales: {
@@ -146,18 +200,31 @@ const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedbackData }) => {
 
       <div style={styles.chartContainer}>
         <div style={styles.chartItem}>
-          <h3>前回との比較</h3>
+          {/* <h3>前回との比較</h3> */}
           <RadarChart data={radarData} options={radarOptions} />
         </div>
 
         <div style={styles.chartItem}>
-          <h3>平均評価の推移</h3>
+          {/* <h3>平均評価の推移</h3> */}
           <LineChart data={lineData} options={lineOptions} />
         </div>
       </div>
 
       <div style={styles.messageBox}>
-        <span role="img" aria-label="checkmark">✔️</span> いい調子ですね！これからも頑張りましょう！
+      <CheckCircleOutlineIcon
+        style={{ 
+          color: '#F00033', 
+          marginRight: '8px', 
+          verticalAlign: 'middle',  // アイコンをテキストの中央に揃える
+          fontSize: '1.2em'         // テキストの大きさに合わせてアイコンのサイズを調整
+        }} 
+      />
+      <span style={{ verticalAlign: 'middle' }}>いい調子ですね！これからも頑張りましょう！</span>
+
+      </div>
+
+      <div style={styles.listContainer}>
+        <FeedbackList feedbackDataList={feedbackDataList} />
       </div>
     </div>
   );
@@ -172,6 +239,10 @@ const styles = {
   subtitleContainer: {
     textAlign: 'center' as 'center',
     margin: '20px',
+  },
+  listContainer: {
+    textAlign: 'center' as 'center',
+    margin: '100px',
   },
   subtitle: {
     textAlign: 'center' as 'center',
