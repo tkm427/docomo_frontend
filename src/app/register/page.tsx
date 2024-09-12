@@ -12,24 +12,37 @@ const RegisterPage: React.FC = () => {
       <Header />
 
       {/* コンテンツ部分 */}
-      <Container maxWidth="sm">
+      <Container
+        maxWidth="sm"
+        sx={{
+          mt: 4,
+          mb: 4,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",  // 垂直方向に中央揃え
+            justifyContent: "center", // 垂直方向に中央揃え
             marginTop: 4,
             padding: 4,
             boxShadow: 1,
             borderRadius: 2,
-            width: "100%",  // 親コンテナの幅を固定
-            maxWidth: "400px",  // ボタンが同じ幅になるように固定
-            margin: "0 auto",  // 横方向に中央揃え
+            width: "100%", // 親コンテナの幅を固定
+            maxWidth: "400px", // ボタンが同じ幅になるように固定
+            margin: "0 auto", // 横方向に中央揃え
           }}
         >
           {/* タイトル */}
-          <Typography variant="h4" sx={{ marginBottom: 3, color: "#ff0033", textAlign: "center" }}>
+          <Typography
+            variant="h4"
+            sx={{ marginBottom: 3, color: "#ff0033", textAlign: "center" }}
+          >
             新規登録
           </Typography>
 
