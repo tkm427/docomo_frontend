@@ -4,6 +4,7 @@ import {
   MessageResponse,
   UserIdResponse,
   ZoomUrlResponse,
+  FeedbackResponse,
 } from "../lib/type";
 
 interface ApiError {
@@ -162,6 +163,26 @@ export const feedback = async(sessionId: string, userId: string, users: []): Pro
         throw new Error(
           axiosError.response.data.error ||
             "An error occurred while sending feedback"
+        );
+      }
+    }
+    throw new Error("An unexpected error occurred");
+  }
+}
+
+export const getFeedback = async(userId: string): Promise<FeedbackResponse> => {
+  try {
+    const response = await axios.get<FeedbackResponse>(
+      `${BASE_URL}/get_feedback/${userId}/`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<ApiError>;
+      if (axiosError.response) {
+        throw new Error(
+          axiosError.response.data.error ||
+            "An error occurred while getting feedback"
         );
       }
     }
