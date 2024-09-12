@@ -1,10 +1,16 @@
 import axios, { AxiosError } from "axios";
-import { SessionResponse, EndSessionResponse, UserIdResponse, ZoomUrlResponse } from "../lib/type";
+import {
+  SessionResponse,
+  EndSessionResponse,
+  UserIdResponse,
+  ZoomUrlResponse,
+} from "../lib/type";
 
 interface ApiError {
   error: string;
 }
-const BASE_URL = "https://localhost:8001";
+const BASE_URL =
+  "https://7a72ialkw7.execute-api.ap-northeast-1.amazonaws.com/api/";
 
 export const joinOrCreateSession = async (
   userId: string
@@ -56,7 +62,11 @@ export const endSession = async (
   }
 };
 
-export const register = async (name: string, email: string, password: string): Promise<UserIdResponse> => {
+export const register = async (
+  name: string,
+  email: string,
+  password: string
+): Promise<UserIdResponse> => {
   try {
     const response = await axios.post<UserIdResponse>(
       `${BASE_URL}/register`,
@@ -82,7 +92,10 @@ export const register = async (name: string, email: string, password: string): P
   }
 };
 
-export const login = async (email: string, password: string): Promise<UserIdResponse> => {
+export const login = async (
+  email: string,
+  password: string
+): Promise<UserIdResponse> => {
   try {
     const response = await axios.post<UserIdResponse>(
       `${BASE_URL}/login`,
@@ -108,7 +121,9 @@ export const login = async (email: string, password: string): Promise<UserIdResp
   }
 };
 
-export const getZoomUrl = async (sessionId: string): Promise<ZoomUrlResponse> => {
+export const getZoomUrl = async (
+  sessionId: string
+): Promise<ZoomUrlResponse> => {
   try {
     const response = await axios.get<ZoomUrlResponse>(
       `${BASE_URL}/get_zoom_url/${sessionId}/`
@@ -126,4 +141,4 @@ export const getZoomUrl = async (sessionId: string): Promise<ZoomUrlResponse> =>
     }
     throw new Error("An unexpected error occurred");
   }
-}
+};
