@@ -14,8 +14,8 @@ type LineChartProps = {
 
 const LineChart: React.FC<LineChartProps> = ({ data, options }) => {
   return (
-    <div style={{ width: '80%', maxWidth: '500px', margin: '0 auto' }}> {/* 横幅を80%に設定 */}
-      <Line data={data} options={options} />
+    <div style={{ width: '80%', height: '100%', maxWidth: '500px', margin: '0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Line data={data} options={options} />
     </div>
   );
 };
