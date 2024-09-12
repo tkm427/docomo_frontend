@@ -142,3 +142,18 @@ export const getZoomUrl = async (
     throw new Error("An unexpected error occurred");
   }
 };
+
+export const getFeedback = async (userId: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/get_feedback/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching feedback:', error);
+    throw error;
+  }
+};
