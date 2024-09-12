@@ -71,8 +71,7 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbackDataList }) => {
 
           <AccordionDetails>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              {/* 左側（評価 3/10） */}
-              <Box sx={{ flex: '3', mr: 2 }}>
+              <Box sx={{ flex: '5', mr: 2 }}>
                 <Typography variant="h6" sx={{ mb: 2, ml: 2, textAlign: 'left' }}>  {/* 左詰めに変更 */}
                   評価
                 </Typography>
@@ -86,12 +85,13 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbackDataList }) => {
                   {groupedFeedback[date]?.map((feedback, index) => (
                     <Chip
                       key={index}
-                      label={`${feedback.label} ${feedback.value}`}
+                      label={`${feedback.label}: ${feedback.value}`}
                       sx={{
                         backgroundColor: '#FF7043',
                         color: 'white',
                         fontWeight: 'bold',
-                        fontSize: feedback.label === 'チームメンバーへの気配り' ? '8px' : '12px', // 文字が長い場合、フォントサイズを小さく
+                        // fontSize: feedback.label === 'チームメンバーへの気配り' ? '8px' : '12px', // 文字が長い場合、フォントサイズを小さく
+                        fontSize: '12px',
                         padding: '5px',
                         width: '100%', // 各チップの幅を親要素に合わせる
                         minHeight: '30px', // 全てのChipの高さを統一
@@ -103,8 +103,7 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbackDataList }) => {
                 </Box>
               </Box>
 
-              {/* 中央（コメント 4/10） */}
-              <Box sx={{ flex: '4', ml: 2 }}>
+              <Box sx={{ flex: '5', ml: 2 }}>
                 <Typography variant="h6" sx={{ mb: 2, ml: 2, textAlign: 'left' }}>  {/* 左詰めに変更 */}
                   コメント
                 </Typography>
@@ -113,40 +112,6 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbackDataList }) => {
                     <li key={index}>{comment}</li>
                   )) || <Typography>コメントがありません</Typography>}
                 </ul>
-              </Box>
-
-              {/* 右側（メンバー 3/10） */}
-              <Box
-                sx={{
-                  flex: '3',
-                  ml: 2,
-                  display: 'grid', // グリッドレイアウトを使用
-                  gridTemplateColumns: 'repeat(1, 1fr)', // 1列に設定
-                  gap: '8px', // メンバー間のスペース
-                }}
-              >
-                <Typography variant="h6" sx={{ ml: 2,textAlign: 'left' }}>  {/* 左詰めに変更 */}
-                   メンバー
-                </Typography>
-                {['山崎匠真', '山田太郎', '佐藤花子', '田中次郎'].map((member, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column', // 縦並びに設定
-                      alignItems: 'center', // 中央揃え
-                      border: '1px solid #ddd',
-                      borderRadius: '8px',
-                      padding: '10px',
-                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Typography variant="body2" sx={{ fontSize: '12px' }}>
-                      {member}
-                    </Typography>
-                  </Box>
-                ))}
               </Box>
             </Box>
           </AccordionDetails>
