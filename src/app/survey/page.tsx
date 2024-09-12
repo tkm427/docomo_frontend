@@ -30,6 +30,7 @@ const SurveyPage = () => {
     userD: false,
   });
   const [expandedPanels, setExpandedPanels] = useState<number[]>([]);
+  const [ratings, setRatings] = useState<Record<string, number>>({});
 
   const toggleUserForm = (userKey: string) => {
     setExpandedUsers((prev) => ({ ...prev, [userKey]: !prev[userKey] }));
@@ -43,11 +44,15 @@ const SurveyPage = () => {
     );
   };
 
+  const handleRatingChange = (user: string, questionIndex: number, value: number) => {
+    setRatings((prev) => ({ ...prev, [`${user}-${questionIndex}`]: value }));
+  };
+
   const userQuestions = [
     { question: '積極性', description: '自ら進んで物事に取り組む姿勢がある。' },
     { question: '論理的思考', description: '筋道を立てて物事を考えている。' },
     { question: 'リーダーシップ', description: 'チームをまとめ、方向性を示し、目標達成に向けてメンバーを導いている。' },
-    { question: '協調性' , description: 'チームメンバーと協力し合いながら、目標に向かって進めている。'},
+    { question: '協調性', description: 'チームメンバーと協力し合いながら、目標に向かって進めている。' },
     { question: '発信力', description: '自分の意見を伝えている。' },
     { question: '他のメンバーへの気配り', description: 'チームの雰囲気やメンバーの状況に敏感であり、他者のサポートや配慮を適切に行なっている。' },
   ];
@@ -63,8 +68,8 @@ const SurveyPage = () => {
           {['A', 'B', 'C', 'D'].map((user) => (
             <Box key={user}>
               {/* ユーザーのトグルと評価フォーム */}
-              <Box display="flex" alignItems="center" sx={{ mb: 4 }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              <Box display="flex" justifyContent="center" alignItems="center" sx={{ mb: 4 }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center', mr: 1 }}>
                   ユーザー{user}
                 </Typography>
                 <IconButton onClick={() => toggleUserForm(`user${user}`)}>
@@ -87,8 +92,8 @@ const SurveyPage = () => {
                           aria-controls={`panel${index}-content`}
                           id={`panel${index}-header`}
                         >
-                          <FormLabel component="legend">
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
+                          <FormLabel component="legend" sx={{ width: '100%', textAlign: 'center' }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1.25rem', textAlign: 'center' }}>
                               {item.question}
                             </Typography>
                           </FormLabel>
@@ -98,7 +103,7 @@ const SurveyPage = () => {
                             <Typography
                               variant="body1"
                               color="textSecondary"
-                              sx={{ mb: 1, fontSize: '1rem' }}
+                              sx={{ mb: 1, fontSize: '1rem', textAlign: 'center' }}
                             >
                               {item.description}
                             </Typography>
@@ -106,8 +111,11 @@ const SurveyPage = () => {
                         )}
                       </Accordion>
 
-                      {/* 評価フォーム（常に表示） */}
-                      <Box
+                      {/* 評価フォーム（RadioGroupを使用して1つだけ選択可能にする） */}
+                      <RadioGroup
+                        row
+                        value={ratings[`${user}-${index}`] || ''}
+                        onChange={(e) => handleRatingChange(user, index, parseInt(e.target.value))}
                         sx={{
                           display: 'flex',
                           justifyContent: 'center',
@@ -129,17 +137,21 @@ const SurveyPage = () => {
                             <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                               {value}
                             </Typography>
-                            <Radio value={value} name={`rating-${user}-${index}`} />
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label=""
+                            />
                           </Box>
                         ))}
-                      </Box>
+                      </RadioGroup>
                     </Box>
                   ))}
 
                   {/* フィードバック入力（各評価フォームの下に配置） */}
                   <TextField
                     fullWidth
-                    label={`フィードバック（ひとこと） - ユーザー${user}`}
+                    label={`フィードバック（ひとこと）`}
                     variant="outlined"
                     multiline
                     rows={3}
