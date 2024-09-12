@@ -29,8 +29,8 @@ const LoginPage = () => {
       <Container
         maxWidth="sm"
         sx={{
-          mt: 4,
-          mb: 4,
+          mt: 10,  // 画面上部からの距離を増やしてフォームを下に移動
+          mb: 6,
           flex: 1,
           display: "flex",
           flexDirection: "column",
@@ -43,18 +43,17 @@ const LoginPage = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: 4,
-            padding: 4,
+            padding: 6,  // パディングをさらに増やす
             boxShadow: 1,
             borderRadius: 2,
             width: "100%",
-            maxWidth: "400px",
+            maxWidth: "450px",  // 幅を少し広げる
             margin: "0 auto",
           }}
         >
           <Typography
             variant="h4"
-            sx={{ marginBottom: 3, color: "#ff0033", textAlign: "center" }}
+            sx={{ marginBottom: 4, color: "#ff0033", textAlign: "center", fontSize: '2.2rem', fontWeight: 'bold' }}  // フォントサイズをさらに大きく
           >
             ログイン
           </Typography>
@@ -64,7 +63,8 @@ const LoginPage = () => {
             fullWidth
             margin="normal"
             placeholder="メールアドレスを入力してください。"
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
+            InputProps={{ sx: { fontSize: '1.4rem', height: '60px' } }}  // フォントサイズと高さを調整
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -75,7 +75,8 @@ const LoginPage = () => {
             fullWidth
             margin="normal"
             placeholder="パスワードを入力してください。"
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
+            InputProps={{ sx: { fontSize: '1.4rem', height: '60px' } }}  // フォントサイズと高さを調整
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -83,11 +84,13 @@ const LoginPage = () => {
             text="サインイン"
             colorType="primary"
             onClick={handleLogin}
+            sx={{ fontSize: '1.4rem', padding: '14px 0', marginBottom: 2 }}  // ボタンサイズを大きく
           />
           <CustomButton
             text="新規登録はこちら"
             colorType="secondary"
             onClick={() => router.push("/register")}
+            sx={{ fontSize: '1.4rem', padding: '14px 0', borderWidth: 2 }}  // ボタンサイズとボーダー幅を調整
           />
         </Box>
       </Container>
