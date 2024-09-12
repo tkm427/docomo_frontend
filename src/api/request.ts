@@ -144,6 +144,21 @@ export const getZoomUrl = async (
   }
 };
 
+export const getFeedback = async (userId: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/get_feedback/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching feedback:', error);
+    throw error;
+  }
+};
+
 export const feedback = async(sessionId: string, userId: string, users: []): Promise<MessageResponse> => {
   try {
     const response = await axios.post<MessageResponse>(
@@ -163,26 +178,6 @@ export const feedback = async(sessionId: string, userId: string, users: []): Pro
         throw new Error(
           axiosError.response.data.error ||
             "An error occurred while sending feedback"
-        );
-      }
-    }
-    throw new Error("An unexpected error occurred");
-  }
-}
-
-export const getFeedback = async(userId: string): Promise<FeedbackResponse> => {
-  try {
-    const response = await axios.get<FeedbackResponse>(
-      `${BASE_URL}/get_feedback/${userId}/`
-    );
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<ApiError>;
-      if (axiosError.response) {
-        throw new Error(
-          axiosError.response.data.error ||
-            "An error occurred while getting feedback"
         );
       }
     }
