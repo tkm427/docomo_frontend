@@ -1,8 +1,8 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import Header from '../../components/Header';
-import LoadingScreen from '../../components/LoadingScreen';
-import MatchingResultPage from '../../components/MatchingResultPage';
+"use client";
+import React, { useState, useEffect } from "react";
+import Header from "../../../components/Header";
+import LoadingScreen from "../../../components/LoadingScreen";
+import MatchingResultPage from "../../../components/MatchingResultPage";
 
 export default function Page() {
   // Progress barの現在のステップ

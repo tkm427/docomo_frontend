@@ -16,6 +16,7 @@ const LoginPage = () => {
     const response = await login(email, password);
     if (response) {
       console.log(response.userId);
+      localStorage.setItem("userId", response.userId);
       router.push("/m");
     } else {
       alert("ログインに失敗しました。");

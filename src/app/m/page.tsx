@@ -1,9 +1,33 @@
+"use client";
 import React from "react";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Image from "next/image";
 import Header from "../../components/Header"; // 先ほど作成したヘッダーコンポーネントをインポート
-
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { joinOrCreateSession } from "../../api/request";
 const MainPage = () => {
+  const router = useRouter();
+  const [userId, setUserId] = useState<string>("");
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      router.push("/login");
+    } else setUserId(userId);
+  }, []);
+
+  const handleStartMatching = async () => {
+    try {
+      const response = await joinOrCreateSession(userId);
+      router.push(`/match/${response.sessionId}`);
+    } catch (error: any) {
+      alert(
+        error.message
+          ? error.message
+          : "An error occurred while starting the matching"
+      );
+    }
+  };
   return (
     <Box
       sx={{
@@ -50,6 +74,7 @@ const MainPage = () => {
               bgcolor: "#ff0033",
               "&:hover": { bgcolor: "#d50000" },
             }}
+            onClick={handleStartMatching}
           >
             マッチング開始
           </Button>
