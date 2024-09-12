@@ -41,15 +41,7 @@ const MainPage = () => {
         >
           今日も頑張ろう！
         </Typography>
-        <Box
-          sx={{
-            width: "100%",
-            mt: 4,
-            display: "flex",
-            justifyContent: "center",
-            gap: 2,
-          }}
-        >
+        <Box sx={{ width: "100%", mt: 4 }}>
           <Button
             variant="contained"
             fullWidth
@@ -65,7 +57,6 @@ const MainPage = () => {
             variant="outlined"
             fullWidth
             sx={{
-              mb: 2,
               color: "#ff0033",
               borderColor: "#ff0033",
               "&:hover": { borderColor: "#d50000", color: "#d50000" },
