@@ -1,5 +1,4 @@
-// src/app/survey/page.tsx
-"use client"; // クライアントコンポーネントとして指定
+"use client";
 
 import React, { useState } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -18,10 +17,10 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Button,  // Buttonをインポート
+  Button,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Header from '../../components/Header'; // Headerコンポーネントのインポート
+import Header from '../../components/Header';
 
 const SurveyPage = () => {
   const [expandedUsers, setExpandedUsers] = useState<Record<string, boolean>>({
@@ -60,17 +59,32 @@ const SurveyPage = () => {
 
   return (
     <RecoilRoot>
-      {/* ヘッダーコンポーネントを埋め込み */}
       <Header />
 
       <Container maxWidth="md">
-        {/* アンケートフォーム */}
+        {/* タイトルの追加 */}
+        <Typography
+          variant="h4"
+          sx={{
+            color: '#F00033',  // 赤色に設定
+            fontWeight: 'bold', // 太字に設定
+            textAlign: 'center', // 中央揃えに設定
+            mt: 4,  // 上部に余白を追加
+          }}
+        >
+          他のメンバーのフィードバックを記入しましょう！
+        </Typography>
+
         <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
           {['A', 'B', 'C', 'D'].map((user) => (
             <Box key={user}>
-              {/* ユーザーのトグルと評価フォーム */}
               <Box display="flex" justifyContent="center" alignItems="center" sx={{ mb: 4 }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center', mr: 1 }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 'bold', textAlign: 'center', mr: 1, color: '#333', // 文字を濃く設定
+                  }}
+                >
                   ユーザー{user}
                 </Typography>
                 <IconButton onClick={() => toggleUserForm(`user${user}`)}>
@@ -78,15 +92,20 @@ const SurveyPage = () => {
                 </IconButton>
               </Box>
 
-              {/* ユーザーの評価フォーム（トグル可能） */}
               {expandedUsers[`user${user}`] && (
                 <>
-                  {/* 質問リスト */}
                   {userQuestions.map((item, index) => (
                     <Box key={index} sx={{ mb: 4, textAlign: 'center' }}>
                       <Accordion
                         expanded={expandedPanels.includes(index)}
                         onChange={() => togglePanel(index)}
+                        sx={{
+                          boxShadow: 'none',  // ボックスシャドウを削除
+                          backgroundColor: 'transparent',  // 背景色を透明に
+                          '&:before': {
+                            display: 'none',  // デフォルトの枠線を非表示に
+                          },
+                        }}
                       >
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
@@ -94,7 +113,15 @@ const SurveyPage = () => {
                           id={`panel${index}-header`}
                         >
                           <FormLabel component="legend" sx={{ width: '100%', textAlign: 'center' }}>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1.25rem', textAlign: 'center' }}>
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                fontWeight: 'bold',
+                                fontSize: '1.25rem',
+                                textAlign: 'center',
+                                color: '#333',  // 文字を濃く設定
+                              }}
+                            >
                               {item.question}
                             </Typography>
                           </FormLabel>
@@ -103,8 +130,12 @@ const SurveyPage = () => {
                           <AccordionDetails>
                             <Typography
                               variant="body1"
-                              color="textSecondary"
-                              sx={{ mb: 1, fontSize: '1rem', textAlign: 'center' }}
+                              sx={{
+                                mb: 1,
+                                fontSize: '1rem',
+                                textAlign: 'center',
+                                color: '#333', // 文字を濃く設定
+                              }}
                             >
                               {item.description}
                             </Typography>
@@ -112,7 +143,7 @@ const SurveyPage = () => {
                         )}
                       </Accordion>
 
-                      {/* 評価フォーム（RadioGroupを使用して1つだけ選択可能にする） */}
+                      {/* ラジオボタンの位置を揃え、間隔を広げる */}
                       <RadioGroup
                         row
                         value={ratings[`${user}-${index}`] || ''}
@@ -124,7 +155,6 @@ const SurveyPage = () => {
                           mt: 2,
                         }}
                       >
-                        {/* 数字をラジオボタンの上に表示 */}
                         {[1, 2, 3, 4, 5].map((value) => (
                           <Box
                             key={value}
@@ -132,16 +162,24 @@ const SurveyPage = () => {
                               display: 'flex',
                               flexDirection: 'column',
                               alignItems: 'center',
-                              mx: 1,
+                              mx: 4,  // 間隔をさらに広げる
                             }}
                           >
-                            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                fontWeight: 'bold',
+                                mb: 1,
+                                color: '#333', // 文字を濃く設定
+                              }}
+                            >
                               {value}
                             </Typography>
                             <FormControlLabel
                               value={value}
                               control={<Radio />}
                               label=""
+                              sx={{ margin: 0 }}  // ラベルのマージンを削除して中央に揃える
                             />
                           </Box>
                         ))}
@@ -149,22 +187,32 @@ const SurveyPage = () => {
                     </Box>
                   ))}
 
-                  {/* フィードバック入力（各評価フォームの下に配置） */}
+                  {/* フィードバック入力（枠線を再表示） */}
                   <TextField
                     fullWidth
                     label={`フィードバック（ひとこと）`}
-                    variant="outlined"
+                    variant="outlined"  // 枠線を表示するためにvariantをoutlinedに変更
                     multiline
                     rows={3}
-                    sx={{ mt: 4, fontSize: '1rem' }}
-                    InputLabelProps={{ sx: { fontSize: '1.1rem', fontWeight: 'bold' } }}
+                    sx={{
+                      mt: 4,
+                      fontSize: '1rem',
+                      fontWeight: 'bold',  // 文字を太く設定
+                      color: '#333',  // 文字を濃く設定
+                    }}
+                    InputLabelProps={{
+                      sx: {
+                        fontSize: '1.1rem',
+                        fontWeight: 'bold',
+                        color: '#333',  // 文字を濃く設定
+                      },
+                    }}
                   />
                 </>
               )}
             </Box>
           ))}
 
-          {/* 送信ボタンを追加 */}
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
             <Button
               variant="contained"
