@@ -294,17 +294,13 @@ const styles = {
   
   chartItem: {
     width: "50%",
-    textAlign: "center",
-    h3: {
-      fontSize: "6rem",  // 文字サイズを大きく
-      fontWeight: "bold",  // 太字で強調
-    },
+    textAlign: "center" as const, // 'as const' を使用して、型を 'center' のリテラル型に狭める
   },
   chartTitle: {
     fontSize: "1.7rem",
-    fontWeight: "bold",
-    marginBottom: "20px", // タイトルの下にスペースを追加
-    marginTop: "30px", // タイトルの上にスペースを追加（これで下に移動する）
+    fontWeight: "bold" as const, // 'as const' を使用して、型を 'bold' のリテラル型に狭める
+    marginBottom: "20px",
+    marginTop: "30px",
   },
   messageBox: {
     backgroundColor: '#ffecec',
