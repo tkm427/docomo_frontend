@@ -5,7 +5,7 @@ export interface SessionResponse {
   theme?: string;
 }
 
-export interface EndSessionResponse {
+export interface MessageResponse {
   message: string;
 }
 
@@ -20,3 +20,21 @@ export interface ZoomUrlResponse {
   userId?: string[];
   userName: string[];
 }
+
+interface FeedbackItem {
+  id: string;
+  user_id: string;
+  session_id: string;
+  leadership: number;
+  proactivity: number;
+  expression: number;
+  logicality: number;
+  consideration: number;
+  cooperation: number;
+  comment: string;
+}
+
+export interface FeedbackResponse {
+  [date: string]: FeedbackItem[];
+}
+
