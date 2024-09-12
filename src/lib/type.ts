@@ -17,8 +17,8 @@ export interface UserIdResponse {
 export interface ZoomUrlResponse {
   zoomUrl: string;
   theme: string;
-  userId: string;
-  userName: string;
+  userId?: string[];
+  userName: string[];
 }
 
 interface FeedbackItem {
@@ -37,3 +37,4 @@ interface FeedbackItem {
 export interface FeedbackResponse {
   [date: string]: FeedbackItem[];
 }
+

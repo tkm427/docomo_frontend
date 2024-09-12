@@ -1,14 +1,15 @@
 "use client";
-import React from "react";
+import React, { use } from "react";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Image from "next/image";
 import Header from "../../components/Header"; // 先ほど作成したヘッダーコンポーネントをインポート
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { joinOrCreateSession } from "../../api/request";
+import { joinOrCreateSession, getZoomUrl } from "../../api/request";
 const MainPage = () => {
   const router = useRouter();
   const [userId, setUserId] = useState<string>("");
+
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
