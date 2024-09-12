@@ -7,8 +7,8 @@ type ActionButtonProps = {
 
 export default function ActionButton({ zoomUrl }: ActionButtonProps) {
   const handleButtonClick = () => {
-    window.location.href = zoomUrl; // ボタンがクリックされたときにzoomUrlに遷移
-  };
+    window.open(zoomUrl, '_blank'); // 別タブでzoomUrlを開く
+  };  
 
   return (
     <Box sx={{ mt: 4, width: '60%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
