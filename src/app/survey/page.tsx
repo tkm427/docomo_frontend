@@ -18,6 +18,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,  // Buttonをインポート
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from '../../components/Header'; // Headerコンポーネントのインポート
@@ -162,6 +163,27 @@ const SurveyPage = () => {
               )}
             </Box>
           ))}
+
+          {/* 送信ボタンを追加 */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#F00033',
+                color: '#fff',
+                width: '50%',
+                padding: '10px 0',
+                borderRadius: '8px',
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                '&:hover': {
+                  backgroundColor: '#d0002b',
+                },
+              }}
+            >
+              送信
+            </Button>
+          </Box>
         </Paper>
       </Container>
     </RecoilRoot>
