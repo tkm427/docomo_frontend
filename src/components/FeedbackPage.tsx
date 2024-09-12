@@ -199,12 +199,12 @@ const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedbackData }) => {
 
       <div style={styles.chartContainer}>
         <div style={styles.chartItem}>
-        <h3 style={styles.chartTitle}>前回との比較</h3>
+        <h3>前回との比較</h3>
           <RadarChart data={radarData} options={radarOptions} />
         </div>
 
         <div style={styles.chartItem}>
-        <h3 style={styles.chartTitle}>平均評価の推移</h3>
+        <h3>平均評価の推移</h3>
           <LineChart data={lineData} options={lineOptions} />
         </div>
       </div>
@@ -261,8 +261,8 @@ const styles = {
     width: '80%',
     height: '50vh',
     justifyContent: "space-around", // 水平方向の配置
-    // alignItems: "center", // 垂直方向の配置を中央に揃える
-    alignItems: "flex-start",
+    alignItems: "center", // 垂直方向の配置を中央に揃える
+    // alignItems: "flex-start",
     gap: '20px',                // チャート間の隙間
     marginBottom: '40px',
     margin: '0 auto',           // コンテナ自体を画面中央に配置
