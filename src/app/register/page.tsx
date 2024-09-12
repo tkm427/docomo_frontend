@@ -4,8 +4,23 @@ import React from "react";
 import { Box, TextField, Typography, Container } from "@mui/material";
 import Header from "../../components/Header";
 import CustomButton from "../../components/CustomButton";
+import { useRouter } from "next/navigation";
+import { register } from "../../api/request";
 
 const RegisterPage: React.FC = () => {
+  const router = useRouter();
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  const handleRegister = async () => {
+    const response = await register(name, email, password);
+    if (response) {
+      router.push("/login");
+    } else {
+      alert("新規登録に失敗しました。");
+    }
+  };
   return (
     <>
       {/* ヘッダーの表示 */}
@@ -53,6 +68,8 @@ const RegisterPage: React.FC = () => {
             fullWidth
             margin="normal"
             placeholder="入力してください。"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <TextField
             label="Eメール"
@@ -60,6 +77,8 @@ const RegisterPage: React.FC = () => {
             fullWidth
             margin="normal"
             placeholder="入力してください。"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             label="パスワード"
@@ -68,9 +87,15 @@ const RegisterPage: React.FC = () => {
             fullWidth
             margin="normal"
             placeholder="入力してください。"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
-          <CustomButton text="新規登録" colorType="primary" />
+          <CustomButton
+            text="新規登録"
+            colorType="primary"
+            onClick={handleRegister}
+          />
         </Box>
       </Container>
     </>
