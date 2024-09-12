@@ -59,23 +59,22 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 //   ],
 // };
 // =======
-// interface Feedback {
-//   proactivity: number;
-//   logicality: number;
-//   leadership: number;
-//   cooperation: number;
-//   expression: number;
-//   consideration: number;
-//   comment: string;
-//   session_id: string;
-//   user_id: string;
-//   id: string;
-// }
+interface Feedback {
+  proactivity: number;
+  logicality: number;
+  leadership: number;
+  cooperation: number;
+  expression: number;
+  consideration: number;
+  comment: string;
+  session_id: string;
+  user_id: string;
+  id: string;
+}
 
-// interface FeedbackPageProps {
-//   feedbackData: { [date: string]: Feedback[] }; // 日付ごとのフィードバックの配列
-// }
-// >>>>>>> main
+interface FeedbackPageProps {
+  feedbackData: { [date: string]: Feedback[] }; // 日付ごとのフィードバックの配列
+}
 
 const radarOptions = {
   scales: {
