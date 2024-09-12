@@ -17,6 +17,6 @@ export interface UserIdResponse {
 export interface ZoomUrlResponse {
   zoomUrl: string;
   theme: string;
-  userId: string;
-  userName: string;
+  userId?: string[];
+  userName: string[];
 }
