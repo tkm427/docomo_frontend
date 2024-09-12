@@ -1,64 +1,14 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from './Header';
 import FeedbackMessage from './FeedbackMessage';
 import RadarChart from './RadarChart';
 import LineChart from './LineChart';
 import FeedbackList from './FeedbackList';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { comment } from 'postcss';
 
-// <<<<<<< feature/feedback
-// const feedbackData = [
-//   { label: '積極性', value: 4 },
-//   { label: '論理的思考', value: 3 },
-//   { label: 'リーダーシップ', value: 2 },
-//   { label: '協調性', value: 4 },
-//   { label: '発言力', value: 3 },
-//   { label: 'チームメンバーへの気配り', value: 5 },
-// ];
-
-
-const feedbackDataList = [
-  { date: '2024/9/11', thema: 'お題1', label: '積極性', value: 4 },
-  { date: '2024/9/11', thema: 'お題1', label: '論理的思考', value: 3 },
-  { date: '2024/9/11', thema: 'お題1', label: 'リーダーシップ', value: 2 },
-  { date: '2024/9/11', thema: 'お題1', label: '協調性', value: 4 },
-  { date: '2024/9/11', thema: 'お題1', label: '発言力', value: 3 },
-  { date: '2024/9/11', thema: 'お題1', label: 'チームメンバーへの気配り', value: 5 },
-  { date: '2024/9/12', thema: 'お題2', label: '積極性', value: 3 },
-  { date: '2024/9/12', thema: 'お題2', label: '論理的思考', value: 4 },
-  { date: '2024/9/12', thema: 'お題2', label: 'リーダーシップ', value: 3 },
-  { date: '2024/9/12', thema: 'お題2', label: '協調性', value: 5 },
-  { date: '2024/9/12', thema: 'お題2', label: '発言力', value: 2 },
-  { date: '2024/9/12', thema: 'お題2', label: 'チームメンバーへの気配り', value: 4 },
-  { date: '2024/9/13', thema: 'お題3', label: '積極性', value: 3 },
-  { date: '2024/9/13', thema: 'お題3', label: '論理的思考', value: 4 },
-  { date: '2024/9/13', thema: 'お題3', label: 'リーダーシップ', value: 3 },
-  { date: '2024/9/13', thema: 'お題3', label: '協調性', value: 5 },
-  { date: '2024/9/13', thema: 'お題3', label: '発言力', value: 2 },
-  { date: '2024/9/13', thema: 'お題3', label: 'チームメンバーへの気配り', value: 4 },
-  { date: '2024/9/14', thema: 'お題4', label: '積極性', value: 3 },
-  { date: '2024/9/14', thema: 'お題4', label: '論理的思考', value: 4 },
-  { date: '2024/9/14', thema: 'お題4', label: 'リーダーシップ', value: 3 },
-  { date: '2024/9/14', thema: 'お題4', label: '協調性', value: 5 },
-  { date: '2024/9/14', thema: 'お題4', label: '発言力', value: 2 },
-  { date: '2024/9/14', thema: 'お題4', label: 'チームメンバーへの気配り', value: 4 },
-];
-
-// const radarData = {
-//   labels: feedbackData.map((item) => item.label),
-//   datasets: [
-//     {
-//       label: 'フィードバック',
-//       data: feedbackData.map((item) => item.value),
-//       backgroundColor: 'rgba(240, 0, 51, 0.2)',
-//       borderColor: '#F00033',
-//       borderWidth: 2,
-//     },
-//   ],
-// };
-// =======
 interface Feedback {
   proactivity: number;
   logicality: number;
@@ -109,19 +59,35 @@ const lineOptions = {
 };
 
 const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedbackData }) => {
+  const latestDate = Object.keys(feedbackData).sort().pop(); // 日付を降順にソートして最新の日付を取得
   const getLatestFeedbackData = (feedbackData: { [key: string]: any[] }) => {
     // 最新の日付のフィードバックデータを取得
-    const latestDate = Object.keys(feedbackData).sort().pop(); // 日付を降順にソートして最新の日付を取得
     return feedbackData[latestDate!] || []; // 最新日付のデータを取得
   };
   
   // 最新のフィードバックデータを取得
   const feedbackForRadar = getLatestFeedbackData(feedbackData);
+
+  useEffect(() => {
+    console.log(feedbackForRadar);
+  }, [feedbackForRadar]);
+  
+
+  type Averages = {
+    proactivity: number;
+    logicality: number;
+    leadership: number;
+    cooperation: number;
+    expression: number;
+    consideration: number;
+    [key: string]: number;
+  };
+
   
   // 各フィードバック項目の平均値を計算
-  const calculateAverageFeedback = (feedbackArray: any[]) => {
+  const calculateAverageFeedback = (feedbackArray: Feedback[]) => {
     const totalFeedback = feedbackArray.length;
-    const averages = {
+    const averages: Averages = {
       proactivity: 0,
       logicality: 0,
       leadership: 0,
@@ -146,9 +112,63 @@ const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedbackData }) => {
   
     return averages;
   };
+
+  // 各日付ごとのデータを使用してラベルと平均値を作成
+const labels = Object.keys(feedbackData).sort((a, b) => {
+  return new Date(a).getTime() - new Date(b).getTime(); // 日付を早い順にソート
+});
+
+// 各日付ごとのフィードバックをそのまま返す
+const feedbackAveragesPerDay = labels.map((date) => {
+  const feedbackArray = feedbackData[date];
+  const averageFeedback = calculateAverageFeedback(feedbackArray);
+
+  // 同じ日付のコメントをリストとして収集
+  const commentList = feedbackArray
+    .map(feedback => feedback.comment); // 各フィードバックのコメントを配列に収集
+
+  // 各項目ごとの平均値を返すオブジェクト
+  return {
+    averageProactivity: averageFeedback.proactivity,     // 積極性の平均値
+    averageLogicality: averageFeedback.logicality,       // 論理的思考の平均値
+    averageLeadership: averageFeedback.leadership,       // リーダーシップの平均値
+    averageCooperation: averageFeedback.cooperation,     // 協調性の平均値
+    averageExpression: averageFeedback.expression,       // 発言力の平均値
+    averageConsideration: averageFeedback.consideration, // 気配りの平均値
+    commentList: commentList                              // 同じ日付のコメントのリスト
+  };
+});
+
+
+
+useEffect(() => {
+  console.log(feedbackAveragesPerDay);
+}, [feedbackAveragesPerDay]);
+useEffect(() => {
+  console.log(labels);
+}, [labels]);
+
+const data = labels.map((date) => {
+  const feedbackArray = feedbackData[date];
+  const averageFeedback = calculateAverageFeedback(feedbackArray);
+
+  // 全項目の平均値の平均を求める
+  const totalAverage =
+    (averageFeedback.proactivity +
+      averageFeedback.logicality +
+      averageFeedback.leadership +
+      averageFeedback.cooperation +
+      averageFeedback.expression +
+      averageFeedback.consideration) /
+    6;
+
+  return totalAverage; // 各日付ごとの平均値
+});
   
   // 平均フィードバックを計算
   const averageFeedback = calculateAverageFeedback(feedbackForRadar);
+
+  
   
   // レーダーチャート用のデータを作成
   const radarData = {
@@ -170,14 +190,19 @@ const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedbackData }) => {
       },
     ],
   };
+  // radarData から FeedbackMessage に渡すデータを変換
+  const feedbackDataForMessage = radarData.labels.map((label, index) => ({
+    label,
+    value: radarData.datasets[0].data[index],
+  }));
 
   // Line chart data の例
   const lineData = {
-    labels: ['1回目', '2回目', '3回目', '4回目', '5回目', '6回目'],
+    labels,
     datasets: [
       {
         label: '平均評価',
-        data: [2.5, 2.8, 3.0, 3.2, 3.5, 3.8], // このデータも動的に設定できます
+        data,
         borderColor: '#F00033',
         backgroundColor: 'rgba(240, 0, 51, 0.2)',
         fill: true,
@@ -193,10 +218,9 @@ const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedbackData }) => {
         <h2 style={styles.subtitle}>フィードバック</h2>
       </div>
 
-      <p style={styles.date}>2024/9/11の結果</p>
+      {latestDate && <p style={styles.date}>{latestDate.replace(/-/g, '/')}の結果</p>}
 
-      {/* <FeedbackMessage feedbackData={feedbackData} /> */}
-
+      <FeedbackMessage feedbackData={feedbackDataForMessage} />
       <div style={styles.chartContainer}>
         <div style={styles.chartItem}>
         <h3>前回との比較</h3>
@@ -223,7 +247,7 @@ const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedbackData }) => {
       </div>
 
       <div style={styles.listContainer}>
-        <FeedbackList feedbackDataList={feedbackDataList} />
+        <FeedbackList feedbackAveragesPerDay={feedbackAveragesPerDay} labels={labels}/>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ type FeedbackData = {
 };
 
 type FeedbackMessageProps = {
-  feedbackData: FeedbackData[];
+  feedbackData: FeedbackData[]; // radarDataの形式に合わせる
 };
 
 const FeedbackMessage: React.FC<FeedbackMessageProps> = ({ feedbackData }) => {
@@ -26,7 +26,7 @@ const FeedbackMessage: React.FC<FeedbackMessageProps> = ({ feedbackData }) => {
         return 'チームワークの要！';
       case '発言力':
         return '説得力のあるアイデアマン！';
-      case 'チームメンバーへの気配り':
+      case '気配り': // 'チームメンバーへの気配り'を簡略化
         return 'チームの頼れるサポーター！';
       default:
         return '評価が見つかりません';
@@ -34,7 +34,9 @@ const FeedbackMessage: React.FC<FeedbackMessageProps> = ({ feedbackData }) => {
   };
 
   // 平均値を計算する
-  const averageValue = (feedbackData.reduce((sum, item) => sum + item.value, 0) / feedbackData.length).toFixed(1);
+  const averageValue = (
+    feedbackData.reduce((sum, item) => sum + item.value, 0) / feedbackData.length
+  ).toFixed(1);
 
   return (
     <div style={styles.resultBox}>
@@ -68,7 +70,8 @@ const styles = {
   resultScore: {
     fontSize: '30px',
     color: '#F00033',
-    fontWeight: 'bold' as 'bold',},
+    fontWeight: 'bold' as 'bold',
+  },
 };
 
 export default FeedbackMessage;
