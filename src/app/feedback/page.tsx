@@ -4,8 +4,25 @@ import React, { useEffect, useState } from 'react';
 import FeedbackPage from '../../components/FeedbackPage';
 import { getFeedback } from '../../api/request';
 
+interface Feedback {
+  proactivity: number;
+  logicality: number;
+  leadership: number;
+  cooperation: number;
+  expression: number;
+  consideration: number;
+  comment: string;
+  session_id: string;
+  user_id: string;
+  id: string;
+}
+
+interface FeedbackPageProps {
+  feedbackData: { [date: string]: Feedback[] }; // 日付ごとのフィードバックの配列
+}
+
 const Feedback: React.FC = () => {
-  const [feedbackData, setFeedbackData] = useState<any[]>([]);
+  const [feedbackData, setFeedbackData] = useState<{ [date: string]: Feedback[] }>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const userId = '695e087c-3ead-4b64-8747-679647a5be0d'; // 仮のユーザーID
@@ -14,6 +31,7 @@ const Feedback: React.FC = () => {
     const fetchFeedback = async () => {
       try {
         const data = await getFeedback(userId);
+        console.log(data);
         setFeedbackData(data);
         setLoading(false);
       } catch (err) {
