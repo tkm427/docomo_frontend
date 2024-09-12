@@ -29,6 +29,9 @@ const MainPage = () => {
       );
     }
   };
+  const handleShowFeedback = async () => {
+    router.push("/feedback");
+  }
   return (
     <Box
       sx={{
@@ -87,6 +90,7 @@ const MainPage = () => {
               borderColor: "#ff0033",
               "&:hover": { borderColor: "#d50000", color: "#d50000" },
             }}
+            onClick={handleShowFeedback}
           >
             フィードバック確認
           </Button>
