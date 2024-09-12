@@ -19,10 +19,23 @@ const RadarChart: React.FC<RadarChartProps> = ({ data, options }) => {
         display: false, // ラベル（凡例）を非表示にする
       },
     },
+    layout: {
+      padding: 20,  // チャート内のパディングを調整
+    },
+    scales: {
+      r: {
+        pointLabels: {
+          font: {
+            size: 12, // フォントサイズを少し小さくすることで表示を調整
+          },
+          padding: 15, // ラベルとチャートの間のパディングを増やす
+        },
+      },
+    },
   };
 
   return (
-    <div style={{ width: '20vw', margin: '0 auto' }}>
+    <div style={{ width: '25vw', height: '25vw', margin: '0 auto' }}> {/* サイズを少し広げる */}
       <Radar data={data} options={{ ...defaultOptions, ...options }} />
     </div>
   );
