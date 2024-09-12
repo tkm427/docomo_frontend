@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import {
   SessionResponse,
-  EndSessionResponse,
+  MessageResponse,
   UserIdResponse,
   ZoomUrlResponse,
 } from "../lib/type";
@@ -42,9 +42,9 @@ export const joinOrCreateSession = async (
 
 export const endSession = async (
   sessionId: string
-): Promise<EndSessionResponse> => {
+): Promise<MessageResponse> => {
   try {
-    const response = await axios.get<EndSessionResponse>(
+    const response = await axios.get<MessageResponse>(
       `${BASE_URL}/end_session/${sessionId}/`
     );
     return response.data;
@@ -142,3 +142,29 @@ export const getZoomUrl = async (
     throw new Error("An unexpected error occurred");
   }
 };
+
+export const feedback = async(sessionId: string, userId: string, users: []): Promise<MessageResponse> => {
+  try {
+    const response = await axios.post<MessageResponse>(
+      `${BASE_URL}/feedback`,
+      { sessionId, userId, users },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<ApiError>;
+      if (axiosError.response) {
+        throw new Error(
+          axiosError.response.data.error ||
+            "An error occurred while sending feedback"
+        );
+      }
+    }
+    throw new Error("An unexpected error occurred");
+  }
+}
