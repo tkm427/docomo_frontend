@@ -27,7 +27,12 @@ export default function Page() {
     }, []);
     return (
         <div>
-            {isLoading && <Loading />}
+            {isLoading && 
+                <div>
+                    <h1 className="text-3xl font-bold">マッチング中...</h1>
+                    <Loading />
+                </div>
+                }
             {!isLoading && (
                 <div>
                     <h1 className="text-3xl font-bold">マッチングしました！</h1>
