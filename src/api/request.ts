@@ -10,6 +10,26 @@ import {
 interface ApiError {
   error: string;
 }
+
+// ユーザーへのフィードバックデータの型
+type UserFeedback = {
+  id: string;
+  proactivity: number;
+  logicality: number;
+  leadership: number;
+  cooperation: number;
+  expression: number;
+  consideration: number;
+  comment: string;
+};
+
+// 全体のフィードバックデータの型
+type FeedbackData = {
+  sessionId: string; // セッションID
+  senderId: string;  // フィードバックを送る自分のユーザーID
+  users: Record<string, UserFeedback>; // ユーザーIDをキーとするフィードバックのオブジェクト
+};
+
 const BASE_URL =
   "https://7a72ialkw7.execute-api.ap-northeast-1.amazonaws.com/api/";
 
@@ -159,11 +179,11 @@ export const getFeedback = async (userId: string) => {
   }
 };
 
-export const feedback = async(sessionId: string, userId: string, users: []): Promise<MessageResponse> => {
+export const feedback = async(feedbackData: FeedbackData): Promise<MessageResponse> => {
   try {
     const response = await axios.post<MessageResponse>(
       `${BASE_URL}/feedback`,
-      { sessionId, userId, users },
+      feedbackData,
       {
         headers: {
           "Content-Type": "application/json",

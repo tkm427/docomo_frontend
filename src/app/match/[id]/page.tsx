@@ -15,6 +15,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [zoomUrl, setZoomUrl] = useState<string>("");
   const [theme, setTheme] = useState<string>("");
   const [users, setUsers] = useState<string[]>([]);
+  const [userIds, setUserIds] = useState<string[]>([]);
   const sessionId = params.id;
   useEffect(() => {
     const getUrl = async () => {
@@ -26,6 +27,7 @@ export default function Page({ params }: { params: { id: string } }) {
           setZoomUrl(response.zoomUrl);
           setTheme(response.theme);
           setUsers(response.userName);
+          setUserIds(response.userId);
           clearInterval(intervalId);
           setIsLoading(false);
         } else if (response.userName.length > step) {
@@ -52,6 +54,7 @@ export default function Page({ params }: { params: { id: string } }) {
       ) : (
         <MatchingResultPage
           sessionId={sessionId}
+          userIds={userIds}
           userName={users}
           theme={theme}
           zoomUrl={zoomUrl}

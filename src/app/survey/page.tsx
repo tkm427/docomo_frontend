@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import {
   Box,
@@ -9,8 +9,6 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
-  FormControl,
-  FormLabel,
   TextField,
   Paper,
   IconButton,
@@ -22,15 +20,62 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from '../../components/Header';
 
+import { feedback } from "../../api/request";
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
 const SurveyPage = () => {
-  const [expandedUsers, setExpandedUsers] = useState<Record<string, boolean>>({
-    userA: false,
-    userB: false,
-    userC: false,
-    userD: false,
-  });
+  const [expandedUsers, setExpandedUsers] = useState<Record<string, boolean>>({});
   const [expandedPanels, setExpandedPanels] = useState<number[]>([]);
   const [ratings, setRatings] = useState<Record<string, number>>({});
+  const [comments, setComments] = useState<Record<string, string>>({}); // フィードバックコメント用
+  const [userId, setUserId] = useState('');
+  const [userIds, setUserIds] = useState<string[]>([]); // 自分以外のメンバーのID
+  const [userNames, setUserNames] = useState<string[]>([]); // 自分以外のメンバーの名前
+  const [sessionId, setSessionId] = useState('');
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedUserIds = localStorage.getItem('userIds'); //自分以外のメンバーのID
+    const storedUserNames = localStorage.getItem('userNames');
+    const storedUserId = localStorage.getItem('userId'); // ログイン中の自分のID
+    const storedSessionId = localStorage.getItem('sessionId');
+
+    if (storedUserIds) {
+      setUserIds(JSON.parse(storedUserIds)); // 文字列から配列に変換
+    } else {
+      setUserIds([
+        "dd3c4e5e-4942-4364-b619-a094925791b0",
+        "444fa44f-f4b1-4dff-b40a-977e16c7e8c8",
+        "32eda27e-97c6-4cf0-a8d3-49cc60d460de",
+        "fd8014d4-347b-4423-beba-6607780cc354"
+      ]);
+    }
+
+    if (storedUserNames) {
+      setUserNames(JSON.parse(storedUserNames)); // 文字列から配列に変換
+    } else {
+      setUserNames([
+        "kazuki",
+        "jun",
+        "yusuke",
+        "やまさきんぐ"
+      ]);
+    }
+
+    if (storedUserId) {
+      setUserId(storedUserId); // 自分のユーザーID
+    } else {
+      setUserId("695e087c-3ead-4b64-8747-679647a5be0d");
+    }
+
+    if (storedSessionId) {
+      setSessionId(storedSessionId); // sessionIdはそのまま使用
+    } else {
+      setSessionId("81bd6782-1248-4b53-8b4c-bb213c6809541");
+    }
+  }, []);
 
   const toggleUserForm = (userKey: string) => {
     setExpandedUsers((prev) => ({ ...prev, [userKey]: !prev[userKey] }));
@@ -48,6 +93,10 @@ const SurveyPage = () => {
     setRatings((prev) => ({ ...prev, [`${user}-${questionIndex}`]: value }));
   };
 
+  const handleCommentChange = (user: string, comment: string) => {
+    setComments((prev) => ({ ...prev, [user]: comment }));
+  };
+
   const userQuestions = [
     { question: '積極性', description: '自ら進んで物事に取り組む姿勢がある。' },
     { question: '論理的思考', description: '筋道を立てて物事を考えている。' },
@@ -57,74 +106,108 @@ const SurveyPage = () => {
     { question: '他のメンバーへの気配り', description: 'チームの雰囲気やメンバーの状況に敏感であり、他者のサポートや配慮を適切に行なっている。' },
   ];
 
+  const handleSubmit = async () => {
+    const feedbackData = {
+      sessionId,
+      userId: userId, // 自分のユーザーIDを追加
+      users: userIds.reduce((acc, userId, index) => {
+        const userName = userNames[index]; // 名前とIDが対応している前提
+        const userFeedback = {
+          id: userId,
+          proactivity: ratings[`${userName}-0`] || 0,
+          logicality: ratings[`${userName}-1`] || 0,
+          leadership: ratings[`${userName}-2`] || 0,
+          cooperation: ratings[`${userName}-3`] || 0,
+          expression: ratings[`${userName}-4`] || 0,
+          consideration: ratings[`${userName}-5`] || 0,
+          comment: comments[userName] || '',
+        };
+        acc[userId] = userFeedback;
+        return acc;
+      }, {}),
+    };
+    console.log(feedbackData);
+    console.log(feedbackData['users']);
+    try {
+      const response = await feedback(feedbackData);
+      console.log(response);
+      alert('フィードバックを送信しました！');
+      router.push('/m');
+
+    } catch (error) {
+      console.error('フィードバックの送信に失敗しました。', error);
+      alert('フィードバックの送信に失敗しました。');
+    }
+  };
+
   return (
     <RecoilRoot>
       <Header />
 
       <Container maxWidth="md">
-        {/* タイトルの追加 */}
         <Typography
           variant="h4"
           sx={{
-            color: '#F00033',  // 赤色に設定
-            fontWeight: 'bold', // 太字に設定
-            textAlign: 'center', // 中央揃えに設定
-            mt: 4,  // 上部に余白を追加
+            color: '#F00033',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            mt: 4,
           }}
         >
           他のメンバーのフィードバックを記入しましょう！
         </Typography>
 
         <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-          {['A', 'B', 'C', 'D'].map((user) => (
-            <Box key={user}>
+          {userNames.map((userName, index) => (
+            <Box key={userName}>
               <Box display="flex" justifyContent="center" alignItems="center" sx={{ mb: 4 }}>
                 <Typography
                   variant="h5"
                   sx={{
-                    fontWeight: 'bold', textAlign: 'center', mr: 1, color: '#333', // 文字を濃く設定
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    mr: 1,
+                    color: '#333',
                   }}
                 >
-                  ユーザー{user}
+                  {userName}さん
                 </Typography>
-                <IconButton onClick={() => toggleUserForm(`user${user}`)}>
+                <IconButton onClick={() => toggleUserForm(userName)}>
                   <ExpandMoreIcon />
                 </IconButton>
               </Box>
 
-              {expandedUsers[`user${user}`] && (
+              {expandedUsers[userName] && (
                 <>
-                  {userQuestions.map((item, index) => (
-                    <Box key={index} sx={{ mb: 4, textAlign: 'center' }}>
+                  {userQuestions.map((item, questionIndex) => (
+                    <Box key={questionIndex} sx={{ mb: 4, textAlign: 'center' }}>
                       <Accordion
-                        expanded={expandedPanels.includes(index)}
-                        onChange={() => togglePanel(index)}
+                        expanded={expandedPanels.includes(questionIndex)}
+                        onChange={() => togglePanel(questionIndex)}
                         sx={{
-                          boxShadow: 'none',  // ボックスシャドウを削除
-                          backgroundColor: 'transparent',  // 背景色を透明に
+                          boxShadow: 'none',
+                          backgroundColor: 'transparent',
                           '&:before': {
-                            display: 'none',  // デフォルトの枠線を非表示に
+                            display: 'none',
                           },
                         }}
                       >
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
-                          aria-controls={`panel${index}-content`}
-                          id={`panel${index}-header`}
+                          aria-controls={`panel${questionIndex}-content`}
+                          id={`panel${questionIndex}-header`}
                         >
-                          <FormLabel component="legend" sx={{ width: '100%', textAlign: 'center' }}>
-                            <Typography
-                              variant="h6"
-                              sx={{
-                                fontWeight: 'bold',
-                                fontSize: '1.25rem',
-                                textAlign: 'center',
-                                color: '#333',  // 文字を濃く設定
-                              }}
-                            >
-                              {item.question}
-                            </Typography>
-                          </FormLabel>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 'bold',
+                              fontSize: '1.25rem',
+                              textAlign: 'center',
+                              color: '#333',
+                            }}
+                          >
+                            {item.question}
+                          </Typography>
                         </AccordionSummary>
                         {item.description && (
                           <AccordionDetails>
@@ -134,7 +217,7 @@ const SurveyPage = () => {
                                 mb: 1,
                                 fontSize: '1rem',
                                 textAlign: 'center',
-                                color: '#333', // 文字を濃く設定
+                                color: '#333',
                               }}
                             >
                               {item.description}
@@ -143,11 +226,10 @@ const SurveyPage = () => {
                         )}
                       </Accordion>
 
-                      {/* ラジオボタンの位置を揃え、間隔を広げる */}
                       <RadioGroup
                         row
-                        value={ratings[`${user}-${index}`] || ''}
-                        onChange={(e) => handleRatingChange(user, index, parseInt(e.target.value))}
+                        value={ratings[`${userName}-${questionIndex}`] || ''}
+                        onChange={(e) => handleRatingChange(userName, questionIndex, parseInt(e.target.value))}
                         sx={{
                           display: 'flex',
                           justifyContent: 'center',
@@ -162,7 +244,7 @@ const SurveyPage = () => {
                               display: 'flex',
                               flexDirection: 'column',
                               alignItems: 'center',
-                              mx: 4,  // 間隔をさらに広げる
+                              mx: 4,
                             }}
                           >
                             <Typography
@@ -170,7 +252,7 @@ const SurveyPage = () => {
                               sx={{
                                 fontWeight: 'bold',
                                 mb: 1,
-                                color: '#333', // 文字を濃く設定
+                                color: '#333',
                               }}
                             >
                               {value}
@@ -179,32 +261,34 @@ const SurveyPage = () => {
                               value={value}
                               control={<Radio />}
                               label=""
-                              sx={{ margin: 0 }}  // ラベルのマージンを削除して中央に揃える
+                              sx={{ margin: 0 }}
                             />
                           </Box>
                         ))}
-                      </RadioGroup>
+                                            </RadioGroup>
                     </Box>
                   ))}
 
-                  {/* フィードバック入力（枠線を再表示） */}
+                  {/* フィードバック入力（ひとことコメント） */}
                   <TextField
                     fullWidth
                     label={`フィードバック（ひとこと）`}
-                    variant="outlined"  // 枠線を表示するためにvariantをoutlinedに変更
+                    variant="outlined"
                     multiline
                     rows={3}
+                    value={comments[userName] || ''}
+                    onChange={(e) => handleCommentChange(userName, e.target.value)}
                     sx={{
                       mt: 4,
                       fontSize: '1rem',
-                      fontWeight: 'bold',  // 文字を太く設定
-                      color: '#333',  // 文字を濃く設定
+                      fontWeight: 'bold',
+                      color: '#333',
                     }}
                     InputLabelProps={{
                       sx: {
                         fontSize: '1.1rem',
                         fontWeight: 'bold',
-                        color: '#333',  // 文字を濃く設定
+                        color: '#333',
                       },
                     }}
                   />
@@ -213,6 +297,7 @@ const SurveyPage = () => {
             </Box>
           ))}
 
+          {/* 送信ボタン */}
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
             <Button
               variant="contained"
@@ -228,6 +313,7 @@ const SurveyPage = () => {
                   backgroundColor: '#d0002b',
                 },
               }}
+              onClick={handleSubmit}
             >
               送信
             </Button>
