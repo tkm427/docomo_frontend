@@ -54,7 +54,7 @@ export default function Page({ params }: { params: { id: string } }) {
       ) : (
         <MatchingResultPage
           sessionId={sessionId}
-          userIds={userIds}
+          userId={userIds}
           userName={users}
           theme={theme}
           zoomUrl={zoomUrl}

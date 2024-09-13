@@ -8,11 +8,11 @@ import { ZoomUrlResponse } from "../lib/type";
 interface MatchingResultPageProps extends ZoomUrlResponse {
   // ZoomUrlResponseのuserName, theme, zoomUrlを受け取る
   sessionId: string;
-  userIds: string[];
+  // userIds: string[];
 }
 
 export default function MatchingResultPage(props: MatchingResultPageProps) {
-  const { sessionId, userIds, userName, theme, zoomUrl } = props;
+  const { sessionId, userId, userName, theme, zoomUrl } = props;
   return (
     <div>
       {/* コンテンツエリア */}
@@ -43,7 +43,7 @@ export default function MatchingResultPage(props: MatchingResultPageProps) {
         <ZoomURLText zoomUrl={zoomUrl} />
 
         {/* ボタンエリア */}
-        <ActionButton zoomUrl={zoomUrl} sessionId={sessionId} userIds={userIds} userName={userName} />
+        <ActionButton zoomUrl={zoomUrl} sessionId={sessionId} userIds={userId} userName={userName} />
       </Box>
     </div>
   );
