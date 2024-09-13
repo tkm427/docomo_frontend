@@ -25,7 +25,7 @@ const Feedback: React.FC = () => {
   const [feedbackData, setFeedbackData] = useState<{ [date: string]: Feedback[] }>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState('695e087c-3ead-4b64-8747-679647a5be0d');
   // const userId = '695e087c-3ead-4b64-8747-679647a5be0d';
 
   useEffect(() => {
@@ -45,12 +45,13 @@ const Feedback: React.FC = () => {
         setLoading(false);
       } catch (err) {
         setError('フィードバックの取得に失敗しました');
+        console.log(err);
         setLoading(false);
       }
     };
 
     fetchFeedback();
-  }, []);
+  }, [userId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
