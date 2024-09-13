@@ -27,10 +27,10 @@ export default function ActionButton({
   };
   const handleEndButtonClick = async () => {
     const response = await endSession(sessionId); // セッションを終了する
-    localStorage.setItem("userIds", JSON.stringify(userIds));
-    localStorage.setItem("userName", JSON.stringify(userName));
-    localStorage.setItem("sessionId", sessionId);
-    router.push("/survey"); // アンケートページに遷移
+    localStorage.setItem('userIds', JSON.stringify(userIds));
+    localStorage.setItem('userNames', JSON.stringify(userName));
+    localStorage.setItem('sessionId', sessionId);
+    router.push('/survey'); // アンケートページに遷移
   };
   return (
     <Box
