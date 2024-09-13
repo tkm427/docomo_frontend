@@ -29,7 +29,7 @@ export default function ActionButton({
     const response = await endSession(sessionId); // セッションを終了する
 
     localStorage.setItem('userIds', JSON.stringify(userIds));
-    localStorage.setItem('userName', JSON.stringify(userName));
+    localStorage.setItem('userNames', JSON.stringify(userName));
     localStorage.setItem('sessionId', sessionId);
     router.push('/survey'); // アンケートページに遷移
   };
