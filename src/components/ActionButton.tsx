@@ -19,7 +19,7 @@ export default function ActionButton({
   zoomUrl,
   sessionId,
   userIds,
-  userName
+  userName,
 }: ActionButtonProps) {
   const router = useRouter();
   const handleButtonClick = () => {
@@ -27,7 +27,6 @@ export default function ActionButton({
   };
   const handleEndButtonClick = async () => {
     const response = await endSession(sessionId); // セッションを終了する
-
     localStorage.setItem('userIds', JSON.stringify(userIds));
     localStorage.setItem('userNames', JSON.stringify(userName));
     localStorage.setItem('sessionId', sessionId);
