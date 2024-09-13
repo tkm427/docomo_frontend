@@ -25,9 +25,18 @@ const Feedback: React.FC = () => {
   const [feedbackData, setFeedbackData] = useState<{ [date: string]: Feedback[] }>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const userId = '695e087c-3ead-4b64-8747-679647a5be0d'; // 仮のユーザーID
+  const [userId, setUserId] = useState('');
+  // const userId = '695e087c-3ead-4b64-8747-679647a5be0d';
 
   useEffect(() => {
+
+    const storedUserId = localStorage.getItem('userId'); // ログイン中の自分のID
+
+    if (storedUserId) {
+      setUserId(storedUserId); // 自分のユーザーID
+    } else {
+      setUserId("695e087c-3ead-4b64-8747-679647a5be0d");
+    }
     const fetchFeedback = async () => {
       try {
         const data = await getFeedback(userId);
@@ -41,7 +50,7 @@ const Feedback: React.FC = () => {
     };
 
     fetchFeedback();
-  }, [userId]);
+  }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
