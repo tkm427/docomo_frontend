@@ -24,6 +24,25 @@ import { feedback } from "../../api/request";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
+// ユーザーへのフィードバックデータの型
+type UserFeedback = {
+  id: string;
+  proactivity: number;
+  logicality: number;
+  leadership: number;
+  cooperation: number;
+  expression: number;
+  consideration: number;
+  comment: string;
+};
+
+// 全体のフィードバックデータの型
+type FeedbackData = {
+  sessionId: string; // セッションID
+  senderId: string;  // フィードバックを送る自分のユーザーID
+  users: Record<string, UserFeedback>; // ユーザーIDをキーとするフィードバックのオブジェクト
+};
+
 const SurveyPage = () => {
   const [expandedUsers, setExpandedUsers] = useState<Record<string, boolean>>({});
   const [expandedPanels, setExpandedPanels] = useState<number[]>([]);
@@ -107,12 +126,12 @@ const SurveyPage = () => {
   ];
 
   const handleSubmit = async () => {
-    const feedbackData = {
+    const feedbackData: FeedbackData = {
       sessionId,
-      userId: userId, // 自分のユーザーIDを追加
-      users: userIds.reduce((acc, userId, index) => {
-        const userName = userNames[index]; // 名前とIDが対応している前提
-        const userFeedback = {
+      senderId: userId,
+      users: userIds.reduce<Record<string, UserFeedback>>((acc, userId, index) => {
+        const userName = userNames[index];
+        const userFeedback: UserFeedback = {
           id: userId,
           proactivity: ratings[`${userName}-0`] || 0,
           logicality: ratings[`${userName}-1`] || 0,
