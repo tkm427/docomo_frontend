@@ -19,7 +19,7 @@ export default function ActionButton({
   zoomUrl,
   sessionId,
   userIds,
-  userName
+  userName,
 }: ActionButtonProps) {
   const router = useRouter();
   const handleButtonClick = () => {
@@ -27,11 +27,10 @@ export default function ActionButton({
   };
   const handleEndButtonClick = async () => {
     const response = await endSession(sessionId); // セッションを終了する
-
-    localStorage.setItem('userIds', JSON.stringify(userIds));
-    localStorage.setItem('userName', JSON.stringify(userName));
-    localStorage.setItem('sessionId', sessionId);
-    router.push('/survey'); // アンケートページに遷移
+    localStorage.setItem("userIds", JSON.stringify(userIds));
+    localStorage.setItem("userName", JSON.stringify(userName));
+    localStorage.setItem("sessionId", sessionId);
+    router.push("/survey"); // アンケートページに遷移
   };
   return (
     <Box
