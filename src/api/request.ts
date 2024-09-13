@@ -166,7 +166,7 @@ export const getZoomUrl = async (
 
 export const getFeedback = async (userId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/get_feedback/${userId}`, {
+    const response = await axios.get(`${BASE_URL}/get_feedbacks/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
